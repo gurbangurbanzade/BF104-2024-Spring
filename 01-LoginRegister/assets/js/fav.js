@@ -1,21 +1,16 @@
-import { getAllData, getById } from "./requests.js";
-import { productURL, userURL } from "./url.js";
+import { getById } from "./requests.js";
+import { userURL } from "./url.js";
 
-const cards = document.querySelector(".cards");
-const exit = document.querySelector(".exit");
-const profName = document.querySelector(".profName");
+const favCards = document.querySelector(".favCards");
 
-profName.innerText = JSON.parse(localStorage.getItem("logionUser")).username;
+console.log(favCards);
 
-exit.addEventListener("click", () => {
-  localStorage.clear();
-  location.href = "./index.html";
-});
+let id = JSON.parse(localStorage.getItem("logionUser")).id;
 
-export const createCard = async (source, url) => {
-  const data = await getAllData(productURL);
+async function createFavCards() {
+  const elem = await getById(userURL, id);
 
-  data.forEach((elem) => {
+  elem.fav.forEach((elem) => {
     // addToBasket.addEventListener("click", addBasket);
     const productCard = document.createElement("div");
     productCard.id = elem.id;
@@ -49,8 +44,8 @@ export const createCard = async (source, url) => {
     productCard.setAttribute("data", elem.id);
     productFav.setAttribute("data", elem.id);
 
-    productCard.addEventListener("click", goToDetail);
-    productFav.addEventListener("click", addToFav);
+    // productCard.addEventListener("click", goToDetail);
+    // productFav.addEventListener("click", addToFav);
 
     productCard.append(badge);
     productCard.append(productTumb);
@@ -67,7 +62,7 @@ export const createCard = async (source, url) => {
     productHeart.append(productFav);
     productLinks.append(productHeart);
     productCard.append(productLinks);
-    cards.append(productCard);
+    favCards.append(productCard);
 
     badge.innerText = "New";
     productImg.src = elem.image;
@@ -77,30 +72,6 @@ export const createCard = async (source, url) => {
       "  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, possimusnostrum!";
     productPrice.innerText = elem.price + "$";
   });
-};
-
-createCard(cards, productURL);
-
-function goToDetail(e) {
-  e.stopPropagation();
-
-  console.log(this.getAttribute("data"));
-  location.href = `./detail.html?id=${this.getAttribute("data")}&name=qurban`;
 }
 
-async function addToFav(e) {
-  e.stopPropagation();
-
-  let id = JSON.parse(localStorage.getItem("logionUser")).id;
-  console.log(id);
-  let prodId = e.target.getAttribute("data");
-  let user = await getById(userURL, id);
-
-  let prod = await getById(productURL, prodId);
-  console.log(user);
-
-  user.fav.push(prod);
-  console.log(user);
-
-  await axios.put(userURL + "/" + id, user);
-}
+createFavCards();
