@@ -1,9 +1,21 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
+import style from "./style.module.css";
+import Button from "react-bootstrap/Button";
+import { Stack } from "react-bootstrap";
 
 const Header = ({ inpValue, setInpValue, todos, setTodos }) => {
   return (
     <div>
+      <Stack direction="horizontal" gap={2}>
+        <Button as="a" variant="primary">
+          Button as link
+        </Button>
+        <Button as="a" variant="success">
+          Button as link
+        </Button>
+      </Stack>
+      ;<h1 className={style.box}>Header</h1>
       <input
         value={inpValue}
         type="text"
